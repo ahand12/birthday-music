@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>生日祝福音乐页面</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Segoe UI", sans-serif;
+  }
+
+  #playBtn {
+    padding: 18px 40px;
+    font-size: 22px;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    background: #ffffff;
+    color: #ff5e7e;
+    cursor: pointer;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    transition: 0.3s;
+  }
+  #playBtn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.25);
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+<button id="playBtn">播放音乐 🎵</button>
+<!-- 使用 GitHub Pages 正确可播放的音频链接 -->
+<audio id="music" src="https://ahand12.github.io/birthday-music/music.mp3"></audio>
+
+<script>
+// 播放按钮
+const playBtn = document.getElementById("playBtn");
+const music = document.getElementById("music");
+playBtn.addEventListener("click", () => {
+  music.play();
+});
+
+// Canvas 动画 - 气泡上升效果
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let bubbles = [];
+
+class Bubble {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height + Math.random() * 100;
+    this.radius = Math.random() * 12 + 6;
+    this.speed = Math.random() * 1 + 0.5;
+    this.alpha = Math.random() * 0.5 + 0.5;
+  }
+  update() {
+    this.y -= this.speed;
+    if (this.y < -20) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+    ctx.fill();
+  }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height + Math.random() * 100;
+  }
+}
+
+function init() {
+  for (let i = 0; i < 80; i++) {
+    bubbles.push(new Bubble());
+  }
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bubbles.forEach(b => {
+    b.update();
+    b.draw();
+  });
+  requestAnimationFrame(animate);
+}
+
+init();
+animate();
+
+window.addEventListener("resize", () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
